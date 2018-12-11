@@ -1,0 +1,21 @@
+.home{
+  position: absolute;
+  top: .9rem;
+  left: 0;
+  width: 100%;
+  bottom: 0;
+  font-size: .28rem;
+}
+.home li{
+  padding: .26rem .2rem;
+  border-bottom: 1Px solid #ddd;
+  text-align: left;
+  line-height: normal;
+}
+.mint-tab-container{
+  margin-top: 40px;
+  padding: 5px 10px;
+}
+.mint-header{
+  background-color: #474b54;
+}

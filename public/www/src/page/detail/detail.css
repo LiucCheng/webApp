@@ -1,0 +1,15 @@
+.detail{
+  font-size: .28rem;
+  margin-top: .9rem;
+}
+.detail .detail_show{
+  padding: .2rem;
+}
+.img_box{
+  width: 100%;
+  padding: 0 .2rem;
+}
+.img_box img{
+  max-width: 100%;
+  max-height: 100%;
+}
