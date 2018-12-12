@@ -8,6 +8,9 @@ import MintUI from 'mint-ui'
 import axios from 'axios'
 import 'mint-ui/lib/style.css'
 
+// css
+import './commonCSS/base.css'
+
 // 组件
 import navigation from './components/navigation'
 import collection from './components/collection'
@@ -19,7 +22,7 @@ Vue.use(collection)
 Vue.use(MintUI)
 
 Vue.config.productionTip = false
-Vue.prototype.ajax = axios
+Vue.prototype.$ajax = axios
 Vue.prototype.$mint = MintUI
 
 /* eslint-disable no-new */

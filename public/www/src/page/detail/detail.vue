@@ -1,12 +1,15 @@
 <template>
   <div class="detail">
-    <navigation :title="title"></navigation>
+    <mt-header fixed :title="title">
+      <div to="/" slot="left">
+        <mt-button icon="back" @click="historyBack()">返回</mt-button>
+      </div>
+    </mt-header>
     <div class="detail_show">{{detail}}</div>
     <div class="img_box"><img :src="src"></div>
   </div>
 </template>
 <script>
-  import DetailData from '../../data/title.json'
   export default {
     data() {
       return {
@@ -15,16 +18,24 @@
         src: ''
       }
     },
+    methods: {
+      historyBack() {
+        this.$router.back()
+      }
+    },
     created() {
-      let id = this.$route.query.id
-      id = parseInt(id)
-      this.ajax.get('/api/getList').then(res => {
+      this.$mint.Indicator.open('加载中')
+      this.$ajax.get('/api/getTypeText', {
+        params: {
+          list_id: this.$route.query.list_id, // 文章内容的id
+          article_id: this.$route.query.article_id
+        }
+      }).then(res => {
         let msg = res.data
-        console.log(msg.data[id])
+        this.$mint.Indicator.close()
         if (!msg.errcode) {
-          this.detail = msg.data[id].text
-          this.title = msg.data[id].title
-          this.src = msg.data[id].text_img
+          this.title = msg.data.title
+          this.detail = msg.data.text
         }
       })
     }

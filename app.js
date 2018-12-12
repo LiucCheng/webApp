@@ -1,14 +1,17 @@
-var express = require('express');
-var path = require('path');
-// var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+let express = require('express');
+let path = require('path');
+// let favicon = require('serve-favicon');
+let logger = require('morgan');
+let cookieParser = require('cookie-parser');
+let bodyParser = require('body-parser');
 
-var index = require('./routes/index');
-var getList = require('./api/getList');
+let index = require('./routes/index');
+// 接口
+let getList = require('./api/getList'); // 获取所有的类
+let getTypeList = require('./api/getTypeList') // 一个类里面的所有文章
+let getTypeText = require('./api/getTypeText') // 获取文章内容
 
-var app = express();
+let app = express();
 
 // view engine setup
 // app.set('views', path.join(__dirname, 'views'));
@@ -27,10 +30,12 @@ app.use(express.static(path.join(__dirname, './public')));
 
 app.use('/', index);
 app.use('/api/getList', getList);
+app.use('/api/getTypeList', getTypeList)
+app.use('/api/getTypeText', getTypeText)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+  let err = new Error('Not Found');
   err.status = 404;
   next(err);
 });

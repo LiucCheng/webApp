@@ -1,9 +1,10 @@
 .detail{
   font-size: .28rem;
-  margin-top: .9rem;
+  margin-top: 44px;
+  color: #666;
 }
 .detail .detail_show{
-  padding: .2rem;
+  padding: 10px;
 }
 .img_box{
   width: 100%;

@@ -1,16 +1,17 @@
 /**
  * Created by Administrator on 2018/12/7.
  */
+let model = require('../model/getData')
 let express = require('express')
 let router = express.Router()
-let getData = require('../model/getData')
 let data = {
     errcode: 0,
+    msg: '',
     data: null
 }
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-    getData('article_list', function (msg) {
+    model.getData('article', function (msg) {
         data.data = msg
         res.json(data)
     })

@@ -35,12 +35,12 @@
     left: 0;
     right: 0;
     width: 100%;
-    height: .9rem;
+    height: 88px;
     background: lightslategrey;
-    font-size: .34rem;
+    font-size: 34px;
     color: #fff;
     text-align: center;
-    line-height: .9rem;
+    line-height: 88px;
     padding: 0 1rem;
     overflow: hidden;
     text-overflow: ellipsis;

@@ -1,5 +1,5 @@
 <template>
-  <div class="collection">
+  <div class="collection" @click="skinPage">
     <slot name="icon" class="collection_icon"></slot>
     <span class="text">{{text}}</span>
   </div>
@@ -11,13 +11,22 @@
         type: String,
         default: ''
       },
-      to: {
+      id: {
         type: String,
         default: ''
       }
     },
     data () {
       return {}
+    },
+    methods: {
+      skinPage() {
+        if (this.id) {
+          this.$router.push({
+            path: '/contentList?id=' + this.id
+          })
+        }
+      }
     }
   }
 </script>
@@ -25,7 +34,7 @@
   .collection{
     height: 88px;
     width: 30%;
-    background: lightcyan;
+    background: #474b54;
     display: flex;
     align-items: center;
     align-content: center;
@@ -34,15 +43,23 @@
     border-radius: 8px;
     cursor: pointer;
     float: left;
+    overflow: hidden;
   }
   .collection + .collection{
     margin-left: 5%;
   }
+  .collection:nth-of-type(n + 4){
+    margin-top: 10px;
+    /*margin-left: 0;*/
+  }
+  .collection:nth-of-type(3n + 1) {
+    margin-left: 0;
+  }
   .collection .text{
-    color: #000;
     flex: 1;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    color: #fff;
   }
 </style>

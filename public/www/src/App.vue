@@ -1,11 +1,25 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <keep-alive v-if="isKeepAlive">
+      <router-view></router-view>
+    </keep-alive>
+    <router-view v-else></router-view>
   </div>
 </template>
 <script>
   export default {
-    name: 'App'
+    name: 'App',
+    data() {
+      return {
+        isKeepAlive: true
+      }
+    },
+    watch: {
+      $route(to ,from, next) {
+        this.isKeepAlive = to.meta.keepAlive
+        console.log(this.isKeepAlive)
+      }
+    }
   }
 </script>
 
