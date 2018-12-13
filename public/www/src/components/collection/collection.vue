@@ -12,7 +12,7 @@
         default: ''
       },
       id: {
-        type: String,
+        type: [String, Number],
         default: ''
       }
     },

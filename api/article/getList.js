@@ -1,7 +1,7 @@
 /**
  * Created by Administrator on 2018/12/7.
  */
-let model = require('../model/getData')
+let getList = require('../../db/model/article/getList')
 let express = require('express')
 let router = express.Router()
 let data = {
@@ -11,8 +11,12 @@ let data = {
 }
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-    model.getData('article', function (msg) {
-        data.data = msg
+    getList.findAll().then(project => {
+        data.data = project
+        res.json(data)
+    }).catch(e => {
+        data.errcode = 22222
+        data.msg = e
         res.json(data)
     })
 })

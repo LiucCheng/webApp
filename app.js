@@ -1,18 +1,18 @@
+let commonJS = require('./commonJS/common')
 let express = require('express');
 let path = require('path');
 // let favicon = require('serve-favicon');
 let logger = require('morgan');
 let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
-
 let index = require('./routes/index');
 // 接口
-let getList = require('./api/getList'); // 获取所有的类
-let getTypeList = require('./api/getTypeList') // 一个类里面的所有文章
-let getTypeText = require('./api/getTypeText') // 获取文章内容
+let getList = require('./api/article/getList'); // 获取所有的类
+let getTypeList = require('./api/article/getTypeList') // 一个类里面的所有文章
+let getTypeText = require('./api/article/getTypeText') // 获取文章内容
+let register = require('./api/user/register') // 注册接口
 
 let app = express();
-
 // view engine setup
 // app.set('views', path.join(__dirname, 'views'));
 // app.set('view engine', 'jade');
@@ -32,6 +32,7 @@ app.use('/', index);
 app.use('/api/getList', getList);
 app.use('/api/getTypeList', getTypeList)
 app.use('/api/getTypeText', getTypeText)
+app.use('/api/register', register)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -49,5 +50,5 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
+global.common = commonJS
 module.exports = app;

@@ -30,11 +30,6 @@
   font-size: 18px;
   color: #fff;
 }
-.mint-button--large {
-  width: 90%;
-  margin-left: 5%;
-  margin-top: 60px;
-}
 .mint-popup-bottom{
   width: 100%;
 }
@@ -68,4 +63,9 @@
 .lc_cell .value{
   float: right;
   color: #999;
+}
+/*第三个界面*/
+.submit_btn{
+  margin-top: 60px;
+  padding: 0 5%;
 }

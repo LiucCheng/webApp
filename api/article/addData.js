@@ -1,7 +1,7 @@
 /**
  * Created by Administrator on 2018/12/11.
  */
-let model = require('../model/getData')
+let model = require('../../db/model/getData')
 let express = require('express')
 let router = express.Router()
 let data = {

@@ -2,7 +2,7 @@
  * Created by Administrator on 2018/12/7.
  */
 // 引入工具类
-let mysqlUtil = require('../db/mysqlConnect')
+let mysqlUtil = require('../mysqlConnect')
 
 // 获取连接
 let connection = async function (conn) {
@@ -119,22 +119,22 @@ let addData = async function (params) {
         })
         return
     }
-    if (!params.key) {
+    if (!params.key.length) {
         params.cb({
             errcode: 200,
             msg: '请选择数据表查询的关键字'
         })
         return
     }
-    if (!params.value) {
+    if (!params.value.length) {
         params.cb({
             errcode: 300,
             msg: '请选择数据表查询的内容'
         })
         return
     }
-    let keyArray = params.key.split(' ')
-    let valueArray = params.value.split(' ')
+    let keyArray = params.key
+    let valueArray = params.value
     if (keyArray.length !== valueArray.length) {
         params.cb({
             errcode: 400,
@@ -144,15 +144,24 @@ let addData = async function (params) {
     }
     let appendStr = ''
     let keyStr = keyArray.join(',')
-    let valueStr = valueArray.join(',')
-    appendStr = ' ' + keyStr + 'VALUES' + valueStr + ';'
+    let valueStr = ''
+    for (let i = 0; i < valueArray.length; i++) {
+        if (i === valueArray.length - 1) {
+            valueStr += '"' + valueArray[i] + '"'
+        } else {
+            valueStr += '"' + valueArray[i] + '",'
+        }
+    }
+    appendStr = '(' + keyStr + ') VALUES (' + valueStr + ');'
     let conn = await mysqlUtil()
     connection(conn)
     // 执行第一个 SQL 语句
     let result = await new Promise((resolve, reject) => {
         let sqlStr = 'INSERT INTO ' + params.table + appendStr
+        console.log(sqlStr)
         conn.query(sqlStr, function (err, ret) {
             if (err) {
+                console.log('err')
                 // 回滚之前的数据库操作, 直至碰到 beginTransaction
                 return conn.rollback(() => {
                     resolve(err)

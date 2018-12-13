@@ -8,6 +8,9 @@ import MintUI from 'mint-ui'
 import axios from 'axios'
 import 'mint-ui/lib/style.css'
 
+// 自定义组件
+import LCUI from '@/components/lc-ui'
+
 // css
 import './commonCSS/base.css'
 
@@ -20,6 +23,9 @@ Vue.use(collection)
 
 // mint-ui框架
 Vue.use(MintUI)
+
+// 自定义组件引入
+Vue.use(LCUI)
 
 Vue.config.productionTip = false
 Vue.prototype.$ajax = axios

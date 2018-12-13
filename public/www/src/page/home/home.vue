@@ -5,8 +5,16 @@
         <mt-button icon="back">返回</mt-button>
       </router-link>
     </mt-header>
-    <mt-tab-container v-model="active">
+    <!--<mt-tab-container v-model="active">
       <mt-tab-container-item id="tab-1">
+        <lc-login-cell title="登录账号" placeholder="请输入登录账号" :lc-model="account" @lcInput="accountInput"></lc-login-cell>
+        <lc-login-cell title="设置密码" placeholder="请输入密码" :lc-model="pwd" @lcInput="pwdInput" lcType="password"></lc-login-cell>
+        <lc-login-cell title="确认密码" placeholder="请输入密码" :lc-model="pwdSure" @lcInput="pwdSureInput" lcType="password"></lc-login-cell>
+        <div class="submit_btn">
+          <mt-button type="primary" size="large" :disabled="registerD" @click.native="registerAccount">注册</mt-button>
+        </div>
+      </mt-tab-container-item>
+      <mt-tab-container-item id="tab-2">
         <mt-loadmore :top-method="loadTop" :bottom-method="loadBottom" :bottom-all-loaded="true" :autoFill="false" ref="loadmore">
           <div class="box_collection">
             <collection v-for="(item, index) in titleList" :key="index" :text="item.title" :id="item.id"></collection>
@@ -14,7 +22,7 @@
           <div class="no_data_line">已加载完</div>
         </mt-loadmore>
       </mt-tab-container-item>
-      <mt-tab-container-item id="tab-2">
+      <mt-tab-container-item id="tab-3">
         <mt-popup v-model="popupVisible" position="bottom">
           <mt-picker :slots="slots" :showToolbar="true" @change="onValuesChange">
             <div class="pic_title">请选择类型 <span class="pic_close" @click="closePop">关闭</span></div>
@@ -25,27 +33,15 @@
           <span class="value">{{selectValue}}</span>
         </div>
         <mt-field label="标题名" placeholder="请输入标题名15字以内" :attr="{maxlength: 15}" v-model="articleTitle"></mt-field>
-        <mt-field label="文章内容" placeholder="文章内容500字以内" :attr="{maxlength: 500}" type="textarea" rows="8" v-modal="textContent"></mt-field>
+        <mt-field label="文章内容" v-model="textInput" placeholder="文章内容500字以内" :attr="{maxlength: 500}" type="textarea" rows="8"></mt-field>
         <mt-button type="primary" size="large" disabled>提交内容</mt-button>
       </mt-tab-container-item>
-      <mt-tab-container-item id="tab-3">
+      <mt-tab-container-item id="tab-4">
         <mt-cell v-for="n in 10" :key="n" title="tab-2"></mt-cell>
       </mt-tab-container-item>
-    </mt-tab-container>
-    <mt-tabbar v-model="selected" fixed>
-      <mt-tab-item id="tab_1">
-        <img slot="icon" src="../../assets/common/i_01.png">
-        首页
-      </mt-tab-item>
-      <mt-tab-item id="tab_2">
-        <img slot="icon" src="../../assets/common/i_03.png">
-        贡献智囊
-      </mt-tab-item>
-      <mt-tab-item id="tab_3">
-        <img slot="icon" src="../../assets/common/i_04.png">
-        我的
-      </mt-tab-item>
-    </mt-tabbar>
+    </mt-tab-container>-->
+    <router-view></router-view>
+    <lc-tab :list="list"></lc-tab>
   </div>
 </template>
 <script>
@@ -53,6 +49,19 @@
   export default {
     data() {
       return {
+        list: [{
+          title: '聊天',
+          to: '/chat'
+        },{
+          title: '趣闻',
+          to: '/goods'
+        },{
+          title: '贡献',
+          to: '/found'
+        },{
+          title: '我的',
+          to: '/me'
+        }],
         popupVisible: false,
         title: '首页',
         selected: 'tab_1',
@@ -60,7 +69,7 @@
         articleTitle: '', // tab2 新增的类型
         selectValue: '',
         selectArticleID: '',
-        textContent: '',
+        textInput: '',
         allLoaded: false,
         count: 0,
         titleList: [],
@@ -69,7 +78,12 @@
             values: [],
             textAlign: 'center'
           }
-        ]
+        ],
+        // 我的界面
+        account: '',
+        pwd: '',
+        pwdSure: '',
+        registerD: true
       }
     },
     watch: {
@@ -77,10 +91,12 @@
         let id = newVal.split('_')[1]
         this.active = 'tab-' + id
         if (id === '1') {
-          this.title = '首页'
+          this.title = '聊天室'
         } else if (id === '2') {
-          this.title = '发现'
+          this.title = '首页'
         } else if (id === '3') {
+          this.title = '添加'
+        } else {
           this.title = '我的'
         }
       }
@@ -121,11 +137,45 @@
           this.$refs.loadmore.onBottomLoaded()
         }, 2000)
       },
-      loadMore() {
-        this.loading = true
-        setTimeout(() => {
-          this.loading = false
-        }, 2500)
+      checkBtn() {
+        if (this.account && this.pwd && this.pwdSure) {
+          this.registerD = false
+        } else {
+          this.registerD = true
+        }
+      },
+      accountInput(value) {
+        this.account = value
+        this.checkBtn()
+      },
+      pwdInput(value) {
+        this.pwd = value
+        this.checkBtn()
+      },
+      pwdSureInput(value) {
+        this.pwdSure = value
+        this.checkBtn()
+      },
+      registerAccount() {
+        if (this.pwd !== this.pwdSure) {
+          this.$mint.Toast({message: '密码两次输入不一样', duration: 1000})
+          return
+        }
+        this.$ajax.post('/api/register', {
+          account: this.account,
+          pwd: this.pwd
+        }).then(res => {
+          this.$mint.Indicator.close()
+          let msg = res.data
+          if (!msg.errcode) {
+            this.titleList = msg.data
+            for (let i = 0; i < msg.data.length; i++) {
+              this.slots[0].values.push(msg.data[i].title)
+            }
+          } else {
+            this.$mint.Toast({message: msg.msg, duration: 1000})
+          }
+        })
       }
     },
     created() {
