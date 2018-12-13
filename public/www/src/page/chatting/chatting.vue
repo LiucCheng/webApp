@@ -115,8 +115,8 @@
   .chatting_content .other_sent div:after{
     content: ' ';
     position: absolute;
-    top: -20px;
-    right: 20px;
+    left: -8px;
+    width: 8px;
     border-width: 12px;
     border-right:10px solid transparent;
     border-left:10px solid transparent;
