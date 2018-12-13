@@ -6,8 +6,12 @@
       </router-link>
     </mt-header>
     <ul class="chatting_content" ref="chatBox">
-      <li class="other_sent">我就是我</li>
-      <li class="me_sent">我是谁</li>
+      <li class="other_sent" v-for="i in 10" :key="i">
+        <div>我是我是我是我是我是我是我是我是我是我是我是我是我是我是我是我是我是我是</div>
+      </li>
+      <li class="me_sent">
+        <div>你爸</div>
+      </li>
     </ul>
     <div class="sent_box" ref="sentBox">
       <textarea v-model="inputSentText" @input="inputT" ref="inputArea"></textarea>
@@ -50,8 +54,9 @@
     left: 0;
     width: 100%;
     bottom: 46px;
-    background: #fff;
+    background: #2b2b2b;
     padding: 10px;
+    overflow: auto;
   }
   .sent_box{
     position: fixed;
@@ -87,5 +92,43 @@
     color: #fff;
     text-align: center;
     line-height: 44px;
+  }
+  .chatting_content li{
+    overflow: hidden;
+  }
+  .chatting_content li:last-child{
+    margin-bottom: 20px;
+  }
+  .chatting_content li + li{
+    margin-top: 10px;
+  }
+  .chatting_content .other_sent div{
+    color: #333;
+    float: left;
+    max-width: 90%;
+    background: #fff;
+    padding: 6px 10px;
+    border-radius: 4px;
+    position: relative;
+    margin-left: 10px;
+  }
+  .chatting_content .other_sent div:after{
+    content: ' ';
+    position: absolute;
+    top: -20px;
+    right: 20px;
+    border-width: 12px;
+    border-right:10px solid transparent;
+    border-left:10px solid transparent;
+    border-top:10px solid transparent;
+    border-bottom:10px solid #fff;
+  }
+  .chatting_content .me_sent div{
+    color: #333;
+    float: right;
+    max-width: 90%;
+    background: #1aad19;
+    padding: 6px 10px;
+    border-radius: 4px;
   }
 </style>
