@@ -5,15 +5,18 @@
         <mt-button icon="back">返回</mt-button>
       </router-link>
     </mt-header>
-    <ul class="chatting_content" ref="chatBox">
-      <li class="other_sent" v-for="i in 10" :key="i">
-        <div>我是我是我是我是我是我是我是我是我是我是我是我是我是我是我是我是我是我是</div>
-      </li>
-      <li class="me_sent">
-        <div>你爸</div>
-      </li>
-    </ul>
-    <div class="sent_box" ref="sentBox">
+    <div id="chatBox" class="chatting_content" ref="chatBox" >
+      <mt-loadmore :top-method="loadTop" @top-status-change="handleTopChange" ref="loadmore"
+                   topPullText="查看更早记录" topDropText="释放加载" style="color: #fff;">
+        <ul ref="scrollHeight">
+          <li v-for="(item, index) in messageSent" :key="index" :class="item.isMe ? 'me_sent' : 'other_sent'">
+            <span class="icon"></span><div>{{item.text}}</div>
+          </li>
+          <!--<div>{{timeShow}}</div>-->
+        </ul>
+      </mt-loadmore>
+    </div>
+    <div id="sentBox" class="sent_box" ref="sentBox">
       <textarea v-model="inputSentText" @input="inputT" ref="inputArea"></textarea>
       <span class="sent_btn" @click="sentMessage">发送</span>
     </div>
@@ -23,8 +26,17 @@
   export default {
     data() {
       return {
+        timeShow: '',
+        messageSent: [
+          {text: '他是谁', isMe: false}, {text: '我是谁', isMe: true}, {text: '他是谁', isMe: false}, {text: '我是谁', isMe: true},
+          {text: '他是谁', isMe: false}, {text: '我是谁', isMe: true}, {text: '他是谁', isMe: false}, {text: '我是谁', isMe: true},
+          {text: '他是谁', isMe: false}, {text: '我是谁', isMe: true}, {text: '他是谁', isMe: false}, {text: '我是谁', isMe: true},
+          {text: '他是谁', isMe: false}, {text: '我是谁', isMe: true}, {text: '他是谁', isMe: false}, {text: '我是谁', isMe: true}
+          ],
         title: '西门崔雪',
-        inputSentText: '不服气'
+        inputSentText: '不服气',
+        isMe: true,
+        topStatus: ''
       }
     },
     methods: {
@@ -39,8 +51,47 @@
         console.log(this.$refs.inputArea.scrollHeight,this.$refs.inputArea.cols)
         // this.$refs.inputArea.style.height = (this.$refs.inputArea.scrollHeight) + 'px'
       },
+
+      handleTopChange(status) {
+        this.topStatus = status
+        console.log(status)
+      },
+      loadTop() {
+        // 加载更多数据
+        setTimeout(() => {
+          this.$refs.loadmore.onTopLoaded()
+        },1000)
+      },
       sentMessage() {
+        let text = this.inputSentText
+        if (!text) {
+          return
+        }
+        if (this.isMe) {
+          this.messageSent.push({text: text,isMe: this.isMe})
+        } else {
+          this.messageSent.push({text: text,isMe: this.isMe})
+        }
+        this.isMe = !this.isMe
+        this.inputSentText = ''
+        setTimeout(() => {
+          this.scrollTopEl()
+        },100)
+      },
+      scrollTopEl() {
+        let container = document.getElementById('chatBox')
+        let scrollHeight = this.$refs.scrollHeight.offsetHeight
+        console.log(scrollHeight)
+        container.scrollTop = scrollHeight
       }
+    },
+    created() {
+      // this.timeShow = this.$common.formatDate(Date.now())
+      // console.log(this.$common.formatDate(Date.now()))
+      // this.$refs.chatBox.scrollHeight
+    },
+    mounted() {
+      this.scrollTopEl()
     }
   }
 </script>
@@ -102,21 +153,34 @@
   .chatting_content li + li{
     margin-top: 10px;
   }
+  .chatting_content .other_sent{
+    position: relative;
+  }
   .chatting_content .other_sent div{
     color: #333;
     float: left;
-    max-width: 90%;
+    max-width: 85%;
     background: #fff;
     padding: 6px 10px;
     border-radius: 4px;
     position: relative;
-    margin-left: 10px;
+    margin-left: 40px;
   }
-  .chatting_content .other_sent div:after{
+  .chatting_content .other_sent .icon{
+    float: left;
+    width: 26px;
+    height: 26px;
+    background: #fff;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 0;
+  }
+  .chatting_content .other_sent div::after{
     content: ' ';
     position: absolute;
     left: -8px;
-    width: 8px;
+    width: 3px;
+    bottom: 10px;
     border-width: 12px;
     border-right:10px solid transparent;
     border-left:10px solid transparent;
@@ -124,11 +188,38 @@
     border-bottom:10px solid #fff;
   }
   .chatting_content .me_sent div{
-    color: #333;
+    color: #000;
     float: right;
-    max-width: 90%;
+    max-width: 85%;
     background: #1aad19;
     padding: 6px 10px;
     border-radius: 4px;
+    position: relative;
+    margin-right: 40px;
+  }
+  .chatting_content .me_sent{
+    position: relative;
+  }
+  .chatting_content .me_sent .icon{
+    float: right;
+    width: 26px;
+    height: 26px;
+    background: #fff;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+  .chatting_content .me_sent div::after{
+    content: ' ';
+    position: absolute;
+    right: -8px;
+    bottom: 10px;
+    width: 3px;
+    border-width: 12px;
+    border-right:10px solid transparent;
+    border-left:10px solid transparent;
+    border-top:10px solid transparent;
+    border-bottom:10px solid #1aad19;
   }
 </style>

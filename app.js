@@ -11,6 +11,7 @@ let getList = require('./api/article/getList'); // 获取所有的类
 let getTypeList = require('./api/article/getTypeList') // 一个类里面的所有文章
 let getTypeText = require('./api/article/getTypeText') // 获取文章内容
 let register = require('./api/user/register') // 注册接口
+let login = require('./api/user/login')
 
 let app = express();
 // view engine setup
@@ -32,6 +33,7 @@ app.use('/', index);
 app.use('/api/getList', getList);
 app.use('/api/getTypeList', getTypeList)
 app.use('/api/getTypeText', getTypeText)
+app.use('/api/login', login)
 app.use('/api/register', register)
 
 // catch 404 and forward to error handler

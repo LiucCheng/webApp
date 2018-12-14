@@ -15,6 +15,9 @@ const Model = sequelize.define('account', {
     nickname: {
         type: Sequelize.STRING(32)
     },
+    img: {
+        type: Sequelize.STRING(50)
+    },
     sex: {
         type: Sequelize.INTEGER(1),
         defaultValue: 0

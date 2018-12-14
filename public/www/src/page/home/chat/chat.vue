@@ -5,7 +5,7 @@
         :title="item.title" :to="item.to"
         :label="item.lable"
         :right="rightBtn"
-      ></mt-cell-swipe>
+      ><img slot="icon" src="../../../assets/me/i_01.png" width="24" height="24"></mt-cell-swipe>
     </ul>
   </div>
 </template>
@@ -38,5 +38,14 @@
 <style scoped>
   .chat_page{
     margin-top: 44px;
+  }
+</style>
+<style>
+  .chat_page .mint-cell-label{
+    padding-left: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 300px;
   }
 </style>

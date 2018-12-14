@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 // import './commonJS/fix'
+import commonJS from './commonJS/common'
 import MintUI from 'mint-ui'
 import axios from 'axios'
 import 'mint-ui/lib/style.css'
@@ -30,6 +31,7 @@ Vue.use(LCUI)
 Vue.config.productionTip = false
 Vue.prototype.$ajax = axios
 Vue.prototype.$mint = MintUI
+Vue.prototype.$common = commonJS
 
 /* eslint-disable no-new */
 new Vue({

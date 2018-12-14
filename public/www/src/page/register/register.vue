@@ -6,8 +6,7 @@
       </router-link>
     </mt-header>
     <lc-login-cell title="登录账号" placeholder="请输入登录账号" :lc-model="account" @lcInput="accountInput"></lc-login-cell>
-    <lc-login-cell title="昵称" placeholder="请输入密码" :lc-model="pwd" @lcInput="pwdInput"
-                   lcType="password"></lc-login-cell>
+    <lc-login-cell title="昵称" placeholder="请输入密码" :lc-model="nickname" @lcInput="nicknameInput"></lc-login-cell>
     <lc-login-cell title="设置密码" placeholder="请输入密码" :lc-model="pwd" @lcInput="pwdInput"
                    lcType="password"></lc-login-cell>
     <lc-login-cell title="确认密码" placeholder="请输入密码" :lc-model="pwdSure" @lcInput="pwdSureInput"
@@ -27,12 +26,13 @@
         account: '',
         pwd: '',
         pwdSure: '',
+        nickname: '',
         registerD: true
       }
     },
     methods: {
       checkBtn() {
-        if (this.account && this.pwd && this.pwdSure) {
+        if (this.account && this.pwd && this.pwdSure && this.nickname) {
           this.registerD = false
         } else {
           this.registerD = true
@@ -50,6 +50,10 @@
         this.pwdSure = value
         this.checkBtn()
       },
+      nicknameInput(value) {
+        this.nickname = value
+        this.checkBtn()
+      },
       registerAccount() {
         if (this.pwd !== this.pwdSure) {
           this.$mint.Toast({message: '密码两次输入不一样', duration: 1000})
@@ -57,15 +61,14 @@
         }
         this.$ajax.post('/api/register', {
           account: this.account,
-          pwd: this.pwd
+          pwd: this.pwd,
+          nickname: this.nickname
         }).then(res => {
           this.$mint.Indicator.close()
           let msg = res.data
           if (!msg.errcode) {
-            this.titleList = msg.data
-            for (let i = 0; i < msg.data.length; i++) {
-              this.slots[0].values.push(msg.data[i].title)
-            }
+            this.$mint.Toast({message: msg.msg, duration: 1000})
+            this.$router.back()
           } else {
             this.$mint.Toast({message: msg.msg, duration: 1000})
           }
