@@ -12,7 +12,6 @@ let data = {
 
 let loginStatus = require('../../status/loginStatus.json')
 router.post('/', function(req, res, next) {
-    console.log(loginStatus,'----------')
     if (!req.body.account || !req.body.pwd) {
         data.errcode = '10000'
         data.msg = '缺少用户信息'
@@ -54,7 +53,7 @@ router.post('/', function(req, res, next) {
             res.json(data)
         }).catch(e => {
             data.errcode = 22222
-            data.msg = '查询出错'
+            data.msg = e
             res.json(data)
         })
     }

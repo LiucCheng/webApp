@@ -12,6 +12,10 @@ let getTypeList = require('./api/article/getTypeList') // 一个类里面的所�
 let getTypeText = require('./api/article/getTypeText') // 获取文章内容
 let register = require('./api/user/register') // 注册接口
 let login = require('./api/user/login')
+let addFriend = require('./api/user/addFriend')
+// let deleteFriend = require('./api/user/deleteFriend')
+let findFriends = require('./api/user/findFriends')
+let getFriendList = require('./api/user/getFriendList')
 
 let app = express();
 // view engine setup
@@ -35,6 +39,9 @@ app.use('/api/getTypeList', getTypeList)
 app.use('/api/getTypeText', getTypeText)
 app.use('/api/login', login)
 app.use('/api/register', register)
+app.use('/api/addFriends', addFriend)
+app.use('/api/findFriends', findFriends)
+app.use('/api/getFriendList', getFriendList)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -72,45 +72,5 @@
   }
 </script>
 <style scoped>
-  .found_page{
-    margin-top: 44px;
-  }
-  .pic_title{
-    height: 44px;
-    line-height: 44px;
-    border-bottom: 1px solid #eee;
-    text-align: center;
-    color: #333;
-    position: relative;
-  }
-  .pic_close{
-    position: absolute;
-    right: 10px;
-    top: 0;
-    height: 100%;
-    width: auto;
-    color: #26a2ff;
-    font-size: 14px;
-  }
-  .mint-popup-bottom{
-    width: 100%;
-  }
-  .found_page .lc_cell{
-    height: 44px;
-    line-height: 44px;
-    padding: 0 10px;
-    background-color: #fff;
-    color: #333;
-  }
-  .found_page .lc_cell .name{
-    float: left;
-  }
-  .found_page .lc_cell .value{
-    float: right;
-    color: #999;
-  }
-  .found_btn{
-    margin-top: 60px;
-    padding: 0 10px;
-  }
+  @import "./addArticle.css";
 </style>

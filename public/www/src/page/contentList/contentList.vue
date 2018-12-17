@@ -32,7 +32,6 @@
           if (!msg.errcode) {
             this.list = msg.data
           }
-          console.log(msg, '---')
         })
       }
     },

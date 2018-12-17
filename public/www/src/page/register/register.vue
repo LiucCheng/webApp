@@ -1,10 +1,5 @@
 <template>
   <div class="register_page">
-    <mt-header fixed :title="title">
-      <router-link to="/" slot="left">
-        <mt-button icon="back">返回</mt-button>
-      </router-link>
-    </mt-header>
     <lc-login-cell title="登录账号" placeholder="请输入登录账号" :lc-model="account" @lcInput="accountInput"></lc-login-cell>
     <lc-login-cell title="昵称" placeholder="请输入密码" :lc-model="nickname" @lcInput="nicknameInput"></lc-login-cell>
     <lc-login-cell title="设置密码" placeholder="请输入密码" :lc-model="pwd" @lcInput="pwdInput"
