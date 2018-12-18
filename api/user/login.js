@@ -12,7 +12,7 @@ let data = {
 }
 router.post('/', function(req, res, next) {
     if (!req.body.username || !req.body.pwd) {
-        data.errcode = 10000
+        data.errcode = '10000'
         data.msg = '缺少用户信息'
         res.json(data)
         return
@@ -44,7 +44,7 @@ router.post('/', function(req, res, next) {
     })
 })
     .get('/', function (req, res, next) {
-        data.errcode = 11111
+        data.errcode = '11111'
         data.msg = '请使用post'
         res.json(data)
     })

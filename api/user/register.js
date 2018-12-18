@@ -13,7 +13,7 @@ let data = {
 let loginStatus = require('../../status/loginStatus.json')
 router.post('/', function(req, res, next) {
     if (!req.body.account || !req.body.pwd) {
-        data.errcode = 10000
+        data.errcode = '10000'
         data.msg = '缺少用户信息'
         res.json(data)
         return
@@ -28,7 +28,7 @@ router.post('/', function(req, res, next) {
     Account.findOne({where: {username : userName}}).then(project => {
         data.data = project
         if (project) {
-            data.errcode = 10000
+            data.errcode = '10000'
             data.msg = '用户名已注册'
             res.json(data)
         } else {
@@ -59,7 +59,7 @@ router.post('/', function(req, res, next) {
     }
 })
     .get('/', function (req, res, next) {
-        data.errcode = 11111
+        data.errcode = '11111'
         data.msg = '请使用post'
         res.json(data)
     })

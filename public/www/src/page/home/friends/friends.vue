@@ -2,8 +2,8 @@
 <template>
   <div class="goods_page">
     <mt-cell v-for="(item, index) in friendList" :key="index"
-             :title="'昵称：' + item.account.nickname" :label="'账号：' + item.account.username"
-             @click.native="userDetail(item.account.uid)"
+             :title="'昵称：' + item.friends_user_name" :label="'用户名：' + item.friends_user_name"
+             @click="userDetail(item.friends_uid)"
     ></mt-cell>
   </div>
 </template>
@@ -44,13 +44,10 @@
           } else {
             this.$mint.Toast(msg.msg, 1000)
           }
+          console.log(msg)
         })
       },
-      userDetail(uid) {
-        console.log(uid, '------------')
-        this.$router.push({
-          path: '/userDetail?friendUid=' + uid
-        })
+      userDetail() {
       }
     },
     created() {

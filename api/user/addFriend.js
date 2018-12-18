@@ -62,7 +62,7 @@ router.post('/', function(req, res, next) {
     }
 })
     .get('/', function (req, res, next) {
-        data.errcode = 11111
+        data.errcode = '11111'
         data.msg = '请使用post'
         res.json(data)
     })
