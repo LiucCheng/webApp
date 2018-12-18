@@ -16,6 +16,7 @@ let addFriend = require('./api/user/addFriend')
 // let deleteFriend = require('./api/user/deleteFriend')
 let findFriends = require('./api/user/findFriends')
 let getFriendList = require('./api/user/getFriendList')
+let getUserInfo = require('./api/user/getUserInfo')
 
 let app = express();
 // view engine setup
@@ -42,6 +43,7 @@ app.use('/api/register', register)
 app.use('/api/addFriends', addFriend)
 app.use('/api/findFriends', findFriends)
 app.use('/api/getFriendList', getFriendList)
+app.use('/api/getUserInfo', getUserInfo)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -17,17 +17,20 @@ router.post('/', function(req, res, next) {
         res.json(data)
         return
     }
-    // https://blog.csdn.net/qq_42112846/article/details/83217414 参考一下
-    // getFriendList.findAll({where: {uid : req.body.uid},
-    //     include: [
-    //         {
-    //             association: getFriendList.belongsTo(Accoount, {uid: req.body.uid}),
-    //         },
-    //     ],
-    // }).then(project => {
-    //     console.log(project)
-    // })
-    getFriendList.findAll({where: {uid : req.body.uid}}).then(project => {
+    getFriendList.belongsTo(Accoount,
+        {
+            foreignKey: 'friends_user_name',
+            targetKey: 'username'
+        })
+    getFriendList.findAll(
+        {
+            where: {uid : req.body.uid},
+            include: [{
+                model: Accoount,
+                attributes: ['uid','username', 'nickname', 'img', 'sex', 'age']
+            }]
+        }
+        ).then(project => {
         if (project) {
             data.errcode = 0
             data.msg = '获取列表成功'
@@ -46,7 +49,7 @@ router.post('/', function(req, res, next) {
     })
 })
     .get('/', function (req, res, next) {
-        data.errcode = '11111'
+        data.errcode = 11111
         data.msg = '请使用post'
         res.json(data)
     })
