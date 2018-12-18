@@ -1,8 +1,7 @@
 /**
- * Created by Administrator on 2018/12/14.
+ * Created by Administrator on 2018/12/18.
  */
 let Account = require('../../db/model/user/Account')
-let loginStatus = require('../../status/loginStatus.json')
 let express = require('express')
 let router = express.Router()
 let data = {
@@ -11,28 +10,31 @@ let data = {
     data: null
 }
 router.post('/', function(req, res, next) {
-    if (!req.body.username || !req.body.pwd) {
+    if (!req.body.uid) {
         data.errcode = 10000
-        data.msg = '缺少用户信息'
+        data.msg = '缺少用户uid'
         res.json(data)
         return
     }
-    Account.findOne({where: {username : req.body.username, password: req.body.pwd}}).then(project => {
+    if (!req.body.friend_uid) {
+        data.errcode = 10001
+        data.msg = '缺少friend_uid参数'
+        res.json(data)
+        return
+    }
+    Account.findOne({where: {uid : req.body.friend_uid}}).then(project => {
         if (project) {
             project = project.toJSON()
             data.errcode = 0
-            data.msg = '登录成功'
+            data.msg = '用户信息获取成功'
             delete project.password
             delete project.state
             delete project.update_time
             delete project.id
             data.data = project
-            loginStatus[project.uid] = {
-                data: Date.now()
-            }
         } else {
-            data.errcode = 2000
-            data.msg = '用户名或密码错误'
+            data.errcode = 20000
+            data.msg = '未查到该用户信息'
             delete data.data
         }
         res.json(data)

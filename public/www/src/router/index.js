@@ -6,6 +6,7 @@ import chatting from '@/page/chatting/chatting'
 import goods from '@/page/home/goods/goods'
 import friends from '@/page/home/friends/friends'
 import me from '@/page/home/me/me'
+import userDetail from '@/page/userDetail/userDetail'
 
 import addFriend from '@/page/addFriend/addFriend'
 import detail from '@/page/detail/detail'
@@ -57,6 +58,10 @@ const router = new Router({
       path: '/contentList',
       component: contentList,
       meta: {name: '分类列表', keepAlive: false}
+    },{
+      path: '/userDetail',
+      component: userDetail,
+      meta: {name: '详细资料', keepAlive: false}
     },{
       path: '*',
       redirect: '/chat'
