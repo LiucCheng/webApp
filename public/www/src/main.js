@@ -8,6 +8,7 @@ import commonJS from './commonJS/common'
 import MintUI from 'mint-ui'
 import axios from 'axios'
 import 'mint-ui/lib/style.css'
+import store from './commonJS/store'
 
 // 自定义组件
 import LCUI from '@/components/lc-ui'
@@ -19,6 +20,17 @@ import './commonCSS/base.css'
 import navigation from './components/navigation'
 import collection from './components/collection'
 
+// socket.io
+import VueSocketIO from 'vue-socket.io'
+Vue.use(new VueSocketIO({
+  debug: false,
+  connection: 'http://localhost:8889',
+  vuex: {
+    store,
+    actionPrefix: 'SOCKET_',
+    mutationPrefix: 'SOCKET_'
+  }
+}))
 Vue.use(navigation)
 Vue.use(collection)
 
@@ -35,7 +47,22 @@ Vue.prototype.$common = commonJS
 
 /* eslint-disable no-new */
 new Vue({
+  sockets: {
+    connect: function () {
+      console.log('socket connected')
+    },
+    customEmit: function (data) {
+      console.log('this method was fired by the socket server. eg: io.emit("customEmit", data)', data)
+    }
+  },
+  methods: {
+    clickButton: function (data) {
+      // $socket is socket.io-client instance
+      this.$socket.emit('emit_method', data)
+    }
+  },
   el: '#app',
+  store,
   router,
   components: { App },
   template: '<App/>'

@@ -2,7 +2,7 @@
  * Created by Administrator on 2018/12/14.
  */
 let Account = require('../../db/model/user/Account')
-let loginStatus = require('../../status/loginStatus.json')
+let LoginIn = require('../../db/model/loginStatus/loginPeople')
 let express = require('express')
 let router = express.Router()
 let data = {
@@ -27,9 +27,8 @@ router.post('/', function(req, res, next) {
             delete project.update_time
             delete project.id
             data.data = project
-            loginStatus[project.uid] = {
-                data: Date.now()
-            }
+            // 保存登录状态
+            saveLoginStatus()
         } else {
             data.errcode = 2000
             data.msg = '用户名或密码错误'
@@ -42,6 +41,13 @@ router.post('/', function(req, res, next) {
         delete data.data
         res.json(data)
     })
+    function saveLoginStatus() {
+        LoginIn.create({
+            login_uid: data.data.uid
+        }).then(project => {
+            console.log('保存成功')
+        })
+    }
 })
     .get('/', function (req, res, next) {
         data.errcode = 11111

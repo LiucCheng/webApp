@@ -47,7 +47,6 @@
         })
       },
       userDetail(uid) {
-        console.log(uid, '------------')
         this.$router.push({
           path: '/userDetail?friendUid=' + uid
         })

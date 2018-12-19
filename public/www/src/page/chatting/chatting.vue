@@ -1,18 +1,18 @@
 <template>
   <div class="chatting_page">
     <mt-header fixed :title="title">
-      <router-link to="/" slot="left">
+      <router-link to="/chat" redirect="/chat" slot="left">
         <mt-button icon="back">返回</mt-button>
       </router-link>
     </mt-header>
     <div id="chatBox" class="chatting_content" ref="chatBox" >
       <mt-loadmore :top-method="loadTop" @top-status-change="handleTopChange" ref="loadmore"
+                   :autoFill="false"
                    topPullText="查看更早记录" topDropText="释放加载" style="color: #fff;">
         <ul ref="scrollHeight">
           <li v-for="(item, index) in messageSent" :key="index" :class="item.isMe ? 'me_sent' : 'other_sent'">
             <span class="icon"></span><div>{{item.text}}</div>
           </li>
-          <!--<div>{{timeShow}}</div>-->
         </ul>
       </mt-loadmore>
     </div>
@@ -27,14 +27,9 @@
     data() {
       return {
         timeShow: '',
-        messageSent: [
-          {text: '他是谁', isMe: false}, {text: '我是谁', isMe: true}, {text: '他是谁', isMe: false}, {text: '我是谁', isMe: true},
-          {text: '他是谁', isMe: false}, {text: '我是谁', isMe: true}, {text: '他是谁', isMe: false}, {text: '我是谁', isMe: true},
-          {text: '他是谁', isMe: false}, {text: '我是谁', isMe: true}, {text: '他是谁', isMe: false}, {text: '我是谁', isMe: true},
-          {text: '他是谁', isMe: false}, {text: '我是谁', isMe: true}, {text: '他是谁', isMe: false}, {text: '我是谁', isMe: true}
-          ],
-        title: '西门崔雪',
-        inputSentText: '不服气',
+        messageSent: [],
+        title: '',
+        inputSentText: '',
         isMe: true,
         topStatus: ''
       }
@@ -54,7 +49,6 @@
 
       handleTopChange(status) {
         this.topStatus = status
-        console.log(status)
       },
       loadTop() {
         // 加载更多数据
@@ -67,13 +61,14 @@
         if (!text) {
           return
         }
-        if (this.isMe) {
-          this.messageSent.push({text: text,isMe: this.isMe})
-        } else {
-          this.messageSent.push({text: text,isMe: this.isMe})
-        }
-        this.isMe = !this.isMe
         this.inputSentText = ''
+        this.$socket.emit('msg', {
+          uid: localStorage.getItem('uid'),
+          toUid: this.$route.query.friendUid,
+          text
+        })
+        this.dataOpe('', text)
+        this.saveChatText({text: text,isMe: true})
         setTimeout(() => {
           this.scrollTopEl()
         },100)
@@ -81,16 +76,106 @@
       scrollTopEl() {
         let container = document.getElementById('chatBox')
         let scrollHeight = this.$refs.scrollHeight.offsetHeight
-        console.log(scrollHeight)
         container.scrollTop = scrollHeight
+      },
+      saveChatText(data) {
+        // 缓存聊天记录
+        let friendUid = this.$route.query.friendUid
+        let saveChat = localStorage.getItem('saveChatText')
+        if (data) {
+          if (saveChat) {
+            saveChat = JSON.parse(saveChat)
+            if (saveChat[friendUid]) {
+              saveChat[friendUid].push(data)
+            } else {
+              saveChat[friendUid] = []
+              saveChat[friendUid].push(data)
+            }
+          } else {
+            saveChat = {}
+            saveChat[friendUid] = []
+            saveChat[friendUid].push(data)
+          }
+          this.messageSent = saveChat[friendUid]
+          localStorage.setItem('saveChatText', JSON.stringify(saveChat))
+        } else {
+          if (saveChat) {
+            saveChat = JSON.parse(saveChat)
+            return saveChat[friendUid]
+          } else {
+            return null
+          }
+        }
+      },
+      dataOpe(msg, text) {
+        // 上一聊天界面的缓存
+        let temp = localStorage.getItem('contentList')
+        let friendUid = this.$route.query.friendUid
+        let isIn = false
+        if (temp) {
+          let tempData = null
+          temp = JSON.parse(temp)
+          for (let i = 0; i < temp.length; i++) {
+            if (temp[i].friendUid === friendUid) {
+              // 存在
+              temp[i].lable = text
+              isIn = true
+              tempData = temp[i]
+              temp.splice(i,1)
+              break
+            }
+          }
+          if (!isIn) {
+            temp.unshift({
+              title: msg.data.nickname,
+              lable: text,
+              to: '/chatting?friendUid=' + friendUid,
+              friendUid: friendUid
+            })
+          } else {
+            temp.unshift(tempData)
+            tempData = null
+          }
+        } else {
+          temp = []
+          temp.push({
+            title: msg.data.nickname,
+            lable: text,
+            to: '/chatting?friendUid=' + friendUid,
+            friendUid: friendUid
+          })
+        }
+        temp = JSON.stringify(temp)
+        localStorage.setItem('contentList', temp)
+      },
+      getUserInfo() {
+        this.$mint.Indicator.open('加载中')
+        this.$ajax.post('/api/getUserInfo', {
+          uid: localStorage.getItem('uid'),
+          friend_uid: this.$route.query.friendUid
+        }).then(res => {
+          let msg = res.data
+          if (!msg.errcode) {
+            this.title = msg.data.nickname
+            this.$mint.Indicator.close()
+            this.dataOpe(msg, '')
+          } else {
+            this.$mint.Toast(msg.msg, 1000)
+          }
+        })
+        let subScribeType = localStorage.getItem('uid')
+        this.sockets.subscribe(subScribeType, (msg) => {
+          this.dataOpe('', msg.text)
+          this.saveChatText({text: msg.text,isMe: false})
+        })
       }
     },
     created() {
-      // this.timeShow = this.$common.formatDate(Date.now())
-      // console.log(this.$common.formatDate(Date.now()))
-      // this.$refs.chatBox.scrollHeight
+      this.getUserInfo()
+      this.messageSent = this.saveChatText()
     },
     mounted() {
+      this.$refs.inputArea.focus()
       this.scrollTopEl()
     }
   }

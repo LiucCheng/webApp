@@ -11,6 +11,15 @@ const store = new Vuex.Store({
   mutations: {
     titleM(state, str) {
       state.title = str
+    },
+    '<MUTATION_PREFIX><EVENT_NAME>'() {
+      console.log('-----mutations-----')
+    }
+  },
+  actions: {
+    '<ACTION_PREFIX><EVENT_NAME>'() {
+      // do something
+      console.log('----actions------')
     }
   }
 })

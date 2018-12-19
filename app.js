@@ -6,6 +6,11 @@ let logger = require('morgan');
 let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
 let index = require('./routes/index');
+
+// 解析body的参数，form表单提交等 上传
+// const multiparty = require("connect-multiparty");
+// const multipartyMiddleware = multiparty();
+
 // 接口
 let getList = require('./api/article/getList'); // 获取所有的类
 let getTypeList = require('./api/article/getTypeList') // 一个类里面的所有文章
