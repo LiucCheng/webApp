@@ -14,6 +14,7 @@
             <span class="icon"></span><div>{{item.text}}</div>
           </li>
         </ul>
+        <li>{{this.$store.state.chatTextData.text}}</li>
       </mt-loadmore>
     </div>
     <div id="sentBox" class="sent_box" ref="sentBox">
@@ -23,6 +24,8 @@
   </div>
 </template>
 <script>
+  // https://blog.csdn.net/aeorus/article/details/80223459
+  import { mapState, mapGetters, mapActions } from 'vuex'
   export default {
     data() {
       return {
@@ -31,8 +34,14 @@
         title: '',
         inputSentText: '',
         isMe: true,
-        topStatus: ''
+        topStatus: '',
+        receviceText: this.$store.state.chatTextData
       }
+    },
+    computed: {
+      ...mapState({
+        chatTextData: state => state.dialog.chatTextData
+      })
     },
     methods: {
       inputT() {
@@ -43,7 +52,6 @@
           this.$refs.inputArea.style.height = this.$refs.inputArea.scrollHeight + 'px'
           this.$refs.chatBox.style.bottom = this.$refs.inputArea.scrollHeight + 3 + 'px'
         }
-        console.log(this.$refs.inputArea.scrollHeight,this.$refs.inputArea.cols)
         // this.$refs.inputArea.style.height = (this.$refs.inputArea.scrollHeight) + 'px'
       },
 
@@ -163,8 +171,12 @@
             this.$mint.Toast(msg.msg, 1000)
           }
         })
+        // this.$store.dispatch('chatTextDataA', this)
         let subScribeType = localStorage.getItem('uid')
+        let count = 0
         this.sockets.subscribe(subScribeType, (msg) => {
+          count++
+          console.log(count)
           this.dataOpe('', msg.text)
           this.saveChatText({text: msg.text,isMe: false})
         })

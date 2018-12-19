@@ -21,7 +21,6 @@
           content: '删除',
           style: {background: '#bb5a2b', color: '#fff', fontSize: '12px'},
           handler: (index) => this.$mint.MessageBox.confirm('你确定移除当前会话么?').then(action => {
-              console.log('aaaaaaaa',action,index)
             })
         }]
       }
@@ -45,7 +44,6 @@
               this.contentList[i].label = saveChatText[this.contentList[i].friendUid][saveChatText[this.contentList[i].friendUid].length - 1].text
             }
           }
-          console.log(this.contentList)
         }
       }
     }

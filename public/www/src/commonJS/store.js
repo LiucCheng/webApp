@@ -6,20 +6,38 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
-    title: '首页'
+    title: '首页',
+    isSubscribe: false,
+    chatTextData: {}
+  },
+  getters: {
+    not_connectStatus(state) {
+      return !state.connectStatus
+    }
   },
   mutations: {
     titleM(state, str) {
       state.title = str
     },
-    '<MUTATION_PREFIX><EVENT_NAME>'() {
-      console.log('-----mutations-----')
+    isSubscribeM(state) {
+      state.connectStatus = true
+    },
+    chatTextDataM(state, data) {
+      console.log(data,'09090909')
+      state.chatTextData = data
     }
   },
   actions: {
-    '<ACTION_PREFIX><EVENT_NAME>'() {
+    chatTextDataA({state, commit}, self) {
       // do something
-      console.log('----actions------')
+      let subScribeType = localStorage.getItem('uid')
+      if (!state.isSubscribe) {
+        self.sockets.subscribe(subScribeType, (msg) => {
+          console.log(state.chatTextData,'888888')
+          commit('isSubscribeM')
+          commit('chatTextDataM', msg)
+        })
+      }
     }
   }
 })

@@ -75,7 +75,6 @@
             this.selectArticleID = this.titleList[i].id
           }
         }
-        console.log(this.selectArticleID)
       },
       closePop() {
         this.popupVisible = false
@@ -140,19 +139,6 @@
       }
     },
     created() {
-      this.$mint.Indicator.open('加载中')
-      this.$ajax.get('/api/getList').then(res => {
-        let msg = res.data
-        console.log(msg,' -------- ')
-        if (!msg.errcode) {
-          this.titleList = msg.data
-          for (let i = 0; i < msg.data.length; i++) {
-            this.slots[0].values.push(msg.data[i].title)
-          }
-          console.log(this.slots)
-          this.$mint.Indicator.close()
-        }
-      })
       if (this.$route.path === '/friend') {
         this.isFriendRightShow = true
       }

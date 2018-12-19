@@ -17,7 +17,6 @@
     watch: {
       $route(to ,from, next) {
         this.isKeepAlive = to.meta.keepAlive
-        console.log(this.isKeepAlive)
       }
     }
   }
