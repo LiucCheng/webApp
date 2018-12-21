@@ -28,6 +28,16 @@
         }]
       }
     },
+    computed: {
+      msgListen() {
+        return this.$store.state.chatTextData
+      }
+    },
+    watch: {
+      msgListen(newVal) {
+        this.receviceText = newVal
+      }
+    },
     methods: {
       toFind() {
         this.$router.push({

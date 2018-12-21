@@ -14,7 +14,7 @@
             <span class="icon"></span><div>{{item.text}}</div>
           </li>
         </ul>
-        <li>{{this.$store.state.chatTextData.text}}</li>
+        <!--<li>{{this.$store.state.chatTextData.text}}</li>-->
       </mt-loadmore>
     </div>
     <div id="sentBox" class="sent_box" ref="sentBox">
@@ -39,9 +39,15 @@
       }
     },
     computed: {
-      ...mapState({
-        chatTextData: state => state.dialog.chatTextData
-      })
+      receviceTextA() {
+        return this.$store.state.chatTextData
+      }
+    },
+    watch: {
+      receviceTextA(newVal) {
+        this.saveChatText({text: newVal.text,isMe: false})
+        this.receviceText = newVal
+      }
     },
     methods: {
       inputT() {
@@ -54,7 +60,6 @@
         }
         // this.$refs.inputArea.style.height = (this.$refs.inputArea.scrollHeight) + 'px'
       },
-
       handleTopChange(status) {
         this.topStatus = status
       },
@@ -171,15 +176,7 @@
             this.$mint.Toast(msg.msg, 1000)
           }
         })
-        // this.$store.dispatch('chatTextDataA', this)
-        let subScribeType = localStorage.getItem('uid')
-        let count = 0
-        this.sockets.subscribe(subScribeType, (msg) => {
-          count++
-          console.log(count)
-          this.dataOpe('', msg.text)
-          this.saveChatText({text: msg.text,isMe: false})
-        })
+        this.$store.dispatch('chatTextDataA', this)
       }
     },
     created() {

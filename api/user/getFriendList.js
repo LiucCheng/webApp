@@ -2,7 +2,7 @@
  * Created by Administrator on 2018/12/17.
  */
 let getFriendList = require('../../db/model/user/Friend')
-let Accoount = require('../../db/model/user/account')
+let Account = require('../../db/model/user/Account')
 let express = require('express')
 let router = express.Router()
 let data = {
@@ -17,7 +17,7 @@ router.post('/', function(req, res, next) {
         res.json(data)
         return
     }
-    getFriendList.belongsTo(Accoount,
+    getFriendList.belongsTo(Account,
         {
             foreignKey: 'friends_user_name',
             targetKey: 'username'
@@ -26,7 +26,7 @@ router.post('/', function(req, res, next) {
         {
             where: {uid : req.body.uid},
             include: [{
-                model: Accoount,
+                model: Account,
                 attributes: ['uid','username', 'nickname', 'img', 'sex', 'age']
             }]
         }
