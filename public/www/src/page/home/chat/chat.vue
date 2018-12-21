@@ -10,6 +10,9 @@
     <ul v-else>
       <mt-cell title="添加聊天伙伴" @click.native="toFind"></mt-cell>
     </ul>
+    <a class="bei_an" href="http://www.miitbeian.gov.cn">
+      粤ICP备16119038号
+    </a>
   </div>
 </template>
 <script>
@@ -61,5 +64,15 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     width: 300px;
+  }
+  .bei_an{
+    margin-top: 10px;
+    height: 44px;
+    line-height: 44px;
+    background: #0d88e5;
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+    display: block;
   }
 </style>
