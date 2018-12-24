@@ -14,17 +14,15 @@
             <span class="icon"></span><div>{{item.text}}</div>
           </li>
         </ul>
-        <!--<li>{{this.$store.state.chatTextData.text}}</li>-->
       </mt-loadmore>
     </div>
     <div id="sentBox" class="sent_box" ref="sentBox">
-      <textarea v-model="inputSentText" @input="inputT" ref="inputArea"></textarea>
+      <textarea v-model="inputSentText" @keyup.13="sentMessage" ref="inputArea"></textarea>
       <span class="sent_btn" @click="sentMessage">发送</span>
     </div>
   </div>
 </template>
 <script>
-  // https://blog.csdn.net/aeorus/article/details/80223459
   import { mapState, mapGetters, mapActions } from 'vuex'
   export default {
     data() {
@@ -46,18 +44,17 @@
     watch: {
       receviceTextA(newVal) {
         this.saveChatText({text: newVal.text,isMe: false})
-        this.receviceText = newVal
       }
     },
     methods: {
-      inputT() {
-        this.$refs.sentBox.style.maxHeight = '100px'
-        this.$refs.inputArea.style.maxHeight = '100px'
-        if (this.$refs.inputArea.scrollHeight < 100) {
-          this.$refs.sentBox.style.height = this.$refs.inputArea.scrollHeight + 'px'
-          this.$refs.inputArea.style.height = this.$refs.inputArea.scrollHeight + 'px'
-          this.$refs.chatBox.style.bottom = this.$refs.inputArea.scrollHeight + 3 + 'px'
-        }
+      inputT(e) {
+//        this.$refs.sentBox.style.maxHeight = '100px'
+//        this.$refs.inputArea.style.maxHeight = '100px'
+//        if (this.$refs.inputArea.scrollHeight < 100) {
+//          this.$refs.sentBox.style.height = this.$refs.inputArea.scrollHeight + 'px'
+//          this.$refs.inputArea.style.height = this.$refs.inputArea.scrollHeight + 'px'
+//          this.$refs.chatBox.style.bottom = this.$refs.inputArea.scrollHeight + 3 + 'px'
+//        }
         // this.$refs.inputArea.style.height = (this.$refs.inputArea.scrollHeight) + 'px'
       },
       handleTopChange(status) {
@@ -78,6 +75,7 @@
         this.$socket.emit('msg', {
           uid: localStorage.getItem('uid'),
           toUid: this.$route.query.friendUid,
+          _socketID: this.$socket.id,
           text
         })
         this.dataOpe('', text)
@@ -88,7 +86,7 @@
       },
       scrollTopEl() {
         let container = document.getElementById('chatBox')
-        let scrollHeight = this.$refs.scrollHeight.offsetHeight
+        let scrollHeight = this.$refs.scrollHeight.offsetHeight + 100
         container.scrollTop = scrollHeight
       },
       saveChatText(data) {

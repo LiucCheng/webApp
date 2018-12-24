@@ -22,6 +22,7 @@ function saveChatText(friendUid, data) {
       saveChat[friendUid] = []
       saveChat[friendUid].push(data)
     }
+    console.log(saveChat[friendUid])
     localStorage.setItem('saveChatText', JSON.stringify(saveChat))
   } else {
     if (saveChat) {
@@ -51,12 +52,12 @@ const store = new Vuex.Store({
     }
   },
   actions: {
-    chatTextDataA({state, commit}, self) {
-      // do something
-      let subScribeType = localStorage.getItem('uid')
+    chatTextDataA({commit}, self) {
       if (!install) {
-        self.sockets.subscribe(subScribeType, (msg) => {
-          saveChatText(msg.fronUid, {text: msg.text, isMe: false})
+        self.sockets.subscribe('receiveMsg', (msg) => {
+          if (self.$route.path !== '/chatting') {
+            saveChatText(msg.fromUid, {text: msg.text, isMe: false})
+          }
           install = true
           commit('chatTextDataM', msg)
         })

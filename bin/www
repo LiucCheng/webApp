@@ -8,7 +8,7 @@ let loginS = require('../status/loginStatus.json')
  */
 let port = normalizePort(process.env.PORT || '8889');
 app.set('port', port);
-
+global.userInfo = {}
 /**
  * Create HTTP server.
  */
@@ -23,19 +23,34 @@ let count = 0
 const io = require('socket.io').listen(server)
 io.on('connection', function (socket) {
     count++
-    console.log(loginS)
-    console.log("链接成功", count)
-    socket.on('message', function (msg) {
-        console.log(msg)
+    console.log('链接成功第', count + '个, ', socket.id)
+    socket.on('saveUserData', msg => {
+        socket.id = msg.uid
+        userInfo[msg.uid] = {
+            uid: msg.uid,
+            socketID: msg._socketID
+        }
+        console.log(userInfo)
     })
     socket.on('msg', function (msg) {
-        console.log(msg)
         let sendMsg = msg.toUid
-        socket.emit(sendMsg, {
-            fromUid: msg.uid,
-            uid: sendMsg,
-            text: msg.text
-        })
+        // socket.emit(sendMsg, {
+        //     fromUid: msg.uid,
+        //     uid: sendMsg,
+        //     text: msg.text
+        // })
+        console.log(msg)
+        console.log(userInfo[msg.toUid].socketID,'----')
+        if (userInfo[msg.toUid].socketID) {
+            // 在线
+            io.to(userInfo[msg.toUid].socketID).emit('receiveMsg', {
+                fromUid: msg.uid,
+                uid: sendMsg,
+                text: msg.text
+            })
+        } else {
+            // 离线
+        }
     })
 })
 // let ws = new WebSocket.Server({ server : server });

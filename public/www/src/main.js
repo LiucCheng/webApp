@@ -22,15 +22,17 @@ import collection from './components/collection'
 
 // socket.io
 import VueSocketIO from 'vue-socket.io'
-Vue.use(new VueSocketIO({
+let io = new VueSocketIO({
   debug: false,
   connection: 'http://localhost:8889',
+  id: '008',
   vuex: {
     store,
     actionPrefix: 'SOCKET_',
     mutationPrefix: 'SOCKET_'
   }
-}))
+})
+Vue.use(io)
 Vue.use(navigation)
 Vue.use(collection)
 
@@ -49,7 +51,13 @@ Vue.prototype.$common = commonJS
 new Vue({
   sockets: {
     connect: function () {
-      console.log('socket connected')
+      console.log('socket connected', this.$socket.id)
+      if (localStorage.getItem('uid')) {
+        this.$socket.emit('saveUserData', {
+          uid: localStorage.getItem('uid'),
+          _socketID: this.$socket.id
+        })
+      }
     },
     customEmit: function (data) {
       console.log('this method was fired by the socket server. eg: io.emit("customEmit", data)', data)
